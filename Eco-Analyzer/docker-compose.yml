@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: eco_analyzer
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile.ai
+    ports:
+      - "5000:5000"
+volumes:
+  postgres_data:

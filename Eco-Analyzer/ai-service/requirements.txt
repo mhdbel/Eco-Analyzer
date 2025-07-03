@@ -1,0 +1,4 @@
+transformers==4.25.1
+scikit-learn==1.2.1
+pandas==1.5.3
+redis==4.5.1

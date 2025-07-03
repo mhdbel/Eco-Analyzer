@@ -1,0 +1,56 @@
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+name: eco-analyzer-backend
+spec:
+replicas: 3
+selector:
+matchLabels:
+app: eco-analyzer-backend
+template:
+metadata:
+labels:
+app: eco-analyzer-backend
+spec:
+containers:
+- name: backend
+image: your-dockerhub/eco-analyzer-backend:latest
+ports:
+- containerPort: 3000
+env:
+- name: NODE_ENV
+value: "production"
+- name: DB_HOST
+value: "eco-analyzer-db"
+resources:
+requests:
+memory: "512Mi"
+cpu: "500m"
+limits:
+memory: "1Gi"
+cpu: "1"
+livenessProbe:
+httpGet:
+path: /health
+port: 3000
+initialDelaySeconds: 30
+periodSeconds: 10
+readinessProbe:
+httpGet:
+path: /health
+port: 3000
+initialDelaySeconds: 5
+periodSeconds: 10
+apiVersion: v1
+kind: Service
+metadata:
+name: eco-analyzer-backend
+spec:
+selector:
+app: eco-analyzer-backend
+ports:
+- protocol: TCP
+port: 80
+targetPort: 3000
+type: LoadBalancer
